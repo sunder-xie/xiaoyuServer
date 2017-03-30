@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aotu.dao.RedPacketDAO" >
+  	<resultMap id="BaseResultMap" type="com.aotu.entity.RedPacket" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="red_packet_no" property="redPacketNo" jdbcType="VARCHAR" />
+	    <result column="member_id" property="memberId" jdbcType="VARCHAR" />
+	    <result column="member_no" property="memberNo" jdbcType="VARCHAR" />
+	    <result column="grant_date" property="grantDate" jdbcType="TIMESTAMP" />
+	    <result column="grant_money" property="grantMoney" jdbcType="DECIMAL" />
+	    <result column="pay_money" property="payMoney" jdbcType="DECIMAL" />
+	    <result column="profit_money" property="profitMoney" jdbcType="DECIMAL" />
+	    <result column="packets" property="packets" jdbcType="VARCHAR" />
+	    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+	    <result column="red_packet_group" property="redPacketGroup" jdbcType="VARCHAR" />
+	    <result column="pay_sort" property="paySort" jdbcType="VARCHAR" />
+	    <result column="drow_status" property="drowStatus" jdbcType="VARCHAR" />
+	    <result column="flag" property="flag" jdbcType="VARCHAR" />
+	    <result column="bonus_flag" property="bonusFlag" jdbcType="VARCHAR" />
+	    <result column="merchant_balance" property="merchantBalance" jdbcType="DECIMAL" />
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+	    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  	</resultMap>
+  	
+  	<insert id="save" parameterType="com.aotu.entity.RedPacket" >
+    	INSERT INTO biz_red_packet
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+      		id,
+      		red_packet_no,
+      		member_id,
+      		grant_date,
+      		grant_money,
+      		pay_money,
+      		profit_money,
+      		packets,
+      		order_id,
+      		red_packet_group,
+      		pay_sort,
+      		drow_status,
+      		flag,
+      		bonus_flag,
+      		merchant_balance,
+      		create_date,
+      		modify_date,
+      		remark
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		#{id,jdbcType=VARCHAR},
+      		#{redPacketNo,jdbcType=VARCHAR},
+      		#{memberId,jdbcType=VARCHAR},
+      		#{grantDate,jdbcType=TIMESTAMP},
+      		#{grantMoney,jdbcType=DECIMAL},
+      		#{payMoney,jdbcType=DECIMAL},
+      		#{profitMoney,jdbcType=DECIMAL},
+      		#{packets,jdbcType=VARCHAR},
+      		#{orderId,jdbcType=VARCHAR},
+      		#{redPacketGroup,jdbcType=VARCHAR},
+      		#{paySort,jdbcType=VARCHAR},
+      		#{drowStatus,jdbcType=VARCHAR},
+      		#{flag,jdbcType=VARCHAR},
+      		#{bonusFlag,jdbcType=VARCHAR},
+      		#{merchantBalance,jdbcType=DECIMAL},
+      		#{createDate,jdbcType=TIMESTAMP},
+      		#{modifyDate,jdbcType=TIMESTAMP},
+      		#{remark,jdbcType=VARCHAR}
+    	</trim>
+  	</insert>
+  	
+  	<delete id="delete" parameterType="java.lang.String" >
+    	DELETE FROM biz_red_packet WHERE id = #{id, jdbcType=VARCHAR}
+  	</delete>
+ 
+ 	<update id="update" parameterType="com.aotu.entity.RedPacket" >
+    	UPDATE biz_red_packet
+    	<set >
+     		red_packet_no = #{redPacketNo,jdbcType=VARCHAR},
+       		member_id = #{memberId,jdbcType=VARCHAR},
+      		grant_date = #{grantDate,jdbcType=TIMESTAMP},
+      		grant_money = #{grantMoney,jdbcType=DECIMAL},
+      		pay_money = #{payMoney,jdbcType=DECIMAL},
+      		profit_money = #{profitMoney,jdbcType=DECIMAL},
+      		packets = #{packets,jdbcType=VARCHAR},
+       		order_id = #{orderId,jdbcType=VARCHAR},
+       		red_packet_group = #{redPacketGroup,jdbcType=VARCHAR},
+       		pay_sort = #{paySort,jdbcType=VARCHAR},
+       		drow_status = #{drowStatus,jdbcType=VARCHAR},
+       		flag = #{flag,jdbcType=VARCHAR},
+       		bonus_flag = #{bonusFlag,jdbcType=VARCHAR},
+       		merchant_balance = #{merchantBalance,jdbcType=DECIMAL},
+      		create_date = #{createDate,jdbcType=TIMESTAMP},
+      		modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      		remark = #{remark,jdbcType=VARCHAR},
+    	</set>
+    	WHERE id = #{id,jdbcType=VARCHAR}
+  	</update>
+  	
+  	<select id="get" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    	SELECT * FROM biz_red_packet
+    		WHERE id = #{id,jdbcType=VARCHAR}
+  	</select>
+  
+  	<select id="queryPage" parameterType="map" resultMap="BaseResultMap">
+  		SELECT m.member_no, r.* FROM biz_red_packet r, biz_member m WHERE m.id = r.member_id  
+  		<if test="obj.memberNo != null and obj.memberNo != ''" >AND m.member_no like '%${obj.memberNo}%'</if>
+    	order by r.grant_date desc
+    	limit ${startIndex},#{pageSize}
+  	</select>
+  	
+  	<select id="queryCount" parameterType="com.aotu.entity.RedPacket" resultType="java.lang.Integer" >
+		SELECT count(*) FROM biz_red_packet r ,biz_member m where m.id = r.member_id
+    		<if test="memberNo != null and memberNo != ''" >AND m.member_no like '%${memberNo}%'</if>
+    		<if test="createDateStr != null" >AND DATE_FORMAT(create_date,'%Y-%m-%d') = #{createDateStr}</if>
+  	</select>
+  	<select id="querySum" parameterType="com.aotu.entity.RedPacket" resultType="java.math.BigDecimal">
+  		SELECT SUM(r.grant_money) grant_money FROM biz_red_packet r WHERE 1 = 1
+  		<if test="createDateStr != null" >AND DATE_FORMAT(create_date,'%Y-%m-%d') = #{createDateStr}</if>
+  	</select>
+  	<select id="queryList" parameterType="com.aotu.entity.RedPacket" resultMap="BaseResultMap">
+  		SELECT *  FROM biz_red_packet r WHERE 1= 1
+  		<if test="packets != null" >AND packets = #{packets}</if>
+  		<if test="drowStatus != null" >AND drow_status = #{drowStatus}</if>
+  		<if test="bonusFlag != null" >AND bonus_flag = #{bonusFlag}</if>
+  		<if test="memberId != null" >AND member_id = #{memberId}</if>
+  		<if test="redPacketNo != null" >AND red_packet_no = #{redPacketNo}</if>
+  		<if test="orderId != null" >AND order_id = #{orderId}</if>
+  		 order by r.grant_date desc
+  	</select>
+  	<select id="queryNewList" parameterType="com.aotu.entity.RedPacket" resultMap="BaseResultMap">
+  		SELECT *  FROM biz_red_packet r WHERE 1= 1
+  		 order by r.grant_date asc, r.red_packet_no asc
+  	</select>
+  	
+  	<delete id="deleteOrder" >
+    	delete from biz_order;
+  	</delete>
+  	<delete id="deleteRedPacket" >
+    	delete from biz_red_packet;
+  	</delete>
+  	<delete id="deleteProfit" >
+    	delete from biz_profit;
+  	</delete>
+  	<update id="updateMember">
+    	update biz_member
+   			set pay_count = 0, pay_amount = 0,red_packet_money = 0, agent_total_money = 0, unsend_agency_fee = 0;
+  	</update>
+  	<update id="updateMerchantSet">
+    	update biz_merchant_set
+   			set merchant_balance = 1000, total_income_amt = 0, total_red_packet_amt = 0,total_pay_count = 0;
+  	</update>
+  	
+</mapper>

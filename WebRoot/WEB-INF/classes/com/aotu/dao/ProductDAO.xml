@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aotu.dao.ProductDAO" >
+  	<resultMap id="BaseResultMap" type="com.aotu.entity.Product" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+	    <result column="price" property="price" jdbcType="VARCHAR" />
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+	    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  	</resultMap>
+  	
+  	<insert id="save" parameterType="com.aotu.entity.Product" >
+    	INSERT INTO biz_product
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+      		id,
+      		product_name,
+      		price,
+      		create_date,
+      		modify_date,
+      		remark
+      		
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		#{id,jdbcType=VARCHAR},
+      		#{productName,jdbcType=VARCHAR},
+      		#{price,jdbcType=VARCHAR},
+      		#{createDate,jdbcType=TIMESTAMP},
+      		#{modifyDate,jdbcType=TIMESTAMP},
+      		#{remark,jdbcType=VARCHAR}
+    	</trim>
+  	</insert>
+  	
+  	<delete id="delete" parameterType="java.lang.String" >
+    	DELETE FROM biz_product WHERE id = #{id, jdbcType=VARCHAR}
+  	</delete>
+ 
+ 	<update id="update" parameterType="com.aotu.entity.Product" >
+    	UPDATE biz_product
+    	<set >
+     		product_name = #{productName,jdbcType=VARCHAR},
+       		price = #{price,jdbcType=VARCHAR},
+      		create_date = #{createDate,jdbcType=TIMESTAMP},
+      		modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      		remark = #{remark,jdbcType=VARCHAR},
+    	</set>
+    	WHERE id = #{id,jdbcType=VARCHAR}
+  	</update>
+  	
+  	<select id="get" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    	SELECT * FROM biz_product
+    		WHERE id = #{id,jdbcType=VARCHAR}
+  	</select>
+  
+  	<select id="queryPage" parameterType="map" resultMap="BaseResultMap">
+  		SELECT *  FROM biz_product WHERE 1=1  
+  			<if test="obj.price != null" >AND price = #{obj.price}</if>
+    	limit ${startIndex},#{pageSize}
+  	</select>
+  	
+  	<select id="queryCount" parameterType="com.aotu.entity.Product" resultType="java.lang.Integer" >
+		SELECT count(*) FROM biz_product WHERE 1=1 
+    		<if test="price != null" >AND price = #{price}</if>
+  	</select>
+  	<select id="querySum" parameterType="com.aotu.entity.Product" resultMap="BaseResultMap">
+  		SELECT SUM(p.price) price FROM biz_product p WHERE 1 = 1
+  	</select>
+  	<select id="queryList" parameterType="com.aotu.entity.Product" resultMap="BaseResultMap">
+  		SELECT *  FROM biz_product p WHERE 1= 1
+  		<if test="price != null" >AND price = #{price}</if>
+  	</select>
+  	
+</mapper>

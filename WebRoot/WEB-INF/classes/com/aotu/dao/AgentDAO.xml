@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aotu.dao.AgentDAO" >
+  	<resultMap id="BaseResultMap" type="com.aotu.entity.Agent" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="agent_level" property="agentLevel" jdbcType="INTEGER" />
+	    <result column="share_member_count" property="shareMemberCount" jdbcType="INTEGER" />
+	    <result column="share_member_pay_count" property="shareMemberPayCount" jdbcType="INTEGER" />
+	    <result column="pay_count" property="payCount" jdbcType="INTEGER" />
+	    <result column="profit_rate" property="profitRate" jdbcType="DECIMAL" />
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+	    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  	</resultMap>
+  	
+  	<insert id="save" parameterType="com.aotu.entity.Agent" >
+    	INSERT INTO biz_agent
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+      		id,
+      		agent_level,
+      		share_member_count,
+      		share_member_pay_count,
+      		pay_count,
+      		profit_rate,
+      		create_date,
+      		modify_date,
+      		remark
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		#{id,jdbcType=VARCHAR},
+      		#{agentLevel,jdbcType=INTEGER},
+      		#{shareMemberCount,jdbcType=INTEGER},
+      		#{shareMemberPayCount,jdbcType=INTEGER},
+      		#{payCount,jdbcType=INTEGER},
+      		#{profitRate,jdbcType=DECIMAL},
+      		#{createDate,jdbcType=TIMESTAMP},
+      		#{modifyDate,jdbcType=TIMESTAMP},
+      		#{remark,jdbcType=VARCHAR}
+    	</trim>
+  	</insert>
+  	
+  	<delete id="delete" parameterType="java.lang.String" >
+    	DELETE FROM biz_agent WHERE id = #{id, jdbcType=VARCHAR}
+  	</delete>
+ 
+ 	<update id="update" parameterType="com.aotu.entity.Agent" >
+    	UPDATE biz_agent
+    	<set >
+     		agent_level = #{agentLevel,jdbcType=INTEGER},
+       		share_member_count = #{shareMemberCount,jdbcType=INTEGER},
+      		share_member_pay_count = #{shareMemberPayCount,jdbcType=INTEGER},
+      		pay_count = #{payCount,jdbcType=INTEGER},
+      		profit_rate = #{profitRate,jdbcType=DECIMAL},
+      		create_date = #{createDate,jdbcType=TIMESTAMP},
+      		modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      		remark = #{remark,jdbcType=VARCHAR}
+    	</set>
+    	WHERE id = #{id,jdbcType=VARCHAR}
+  	</update>
+  	
+  	<select id="get" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    	SELECT * FROM biz_agent
+    		WHERE id = #{id,jdbcType=VARCHAR}
+  	</select>
+  
+  	<select id="queryPage" parameterType="map" resultMap="BaseResultMap">
+  		SELECT *  FROM biz_agent WHERE 1=1  
+  			<if test="obj.agentLevel != null" >AND agent_level = #{obj.agentLevel}</if>
+    	 ORDER BY agent_level
+    	 LIMIT ${startIndex},#{pageSize}
+  	</select>
+  	
+  	<select id="queryCount" parameterType="com.aotu.entity.Agent" resultType="java.lang.Integer" >
+		SELECT count(*) FROM biz_agent WHERE 1=1 
+    		<if test="agentLevel != null" >AND agent_level = #{agentLevel}</if>
+  	</select>
+  	<select id="querySum" parameterType="com.aotu.entity.Agent" resultMap="BaseResultMap">
+  		SELECT SUM(a.agent_level) agent_level FROM biz_agent a WHERE 1 = 1
+  	</select>
+  	<select id="queryList" parameterType="com.aotu.entity.Agent" resultMap="BaseResultMap">
+  		SELECT *  FROM biz_agent a WHERE 1= 1
+  		<if test="agentLevel != null" >AND agent_level = #{agentLevel}</if>
+  	</select>
+  	
+</mapper>

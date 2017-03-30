@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aotu.dao.DeliverDAO" >
+  	<resultMap id="BaseResultMap" type="com.aotu.entity.Deliver" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="deliver_no" property="deliverNo" jdbcType="VARCHAR" />
+	    <result column="deliver_name" property="deliverName" jdbcType="VARCHAR" />
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+	    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  	</resultMap>
+  	
+  	<insert id="save" parameterType="com.aotu.entity.Deliver" >
+    	INSERT INTO biz_deliver
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+      		id,
+      		deliver_no,
+      		deliver_name,
+      		create_date,
+      		modify_date,
+      		remark
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		#{id,jdbcType=VARCHAR},
+      		#{deliverNo,jdbcType=VARCHAR},
+      		#{deliverName,jdbcType=VARCHAR},
+      		#{createDate,jdbcType=TIMESTAMP},
+      		#{modifyDate,jdbcType=TIMESTAMP},
+      		#{remark,jdbcType=VARCHAR}
+    	</trim>
+  	</insert>
+  	
+  	<delete id="delete" parameterType="java.lang.String" >
+    	DELETE FROM biz_deliver WHERE id = #{id, jdbcType=VARCHAR}
+  	</delete>
+ 
+ 	<update id="update" parameterType="com.aotu.entity.Deliver" >
+    	UPDATE biz_deliver
+    	<set >
+     		deliver_no = #{deliverNo,jdbcType=VARCHAR},
+     		deliver_name = #{deliverName,jdbcType=VARCHAR},
+      		create_date = #{createDate,jdbcType=TIMESTAMP},
+      		modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      		remark = #{remark,jdbcType=VARCHAR},
+    	</set>
+    	WHERE id = #{id,jdbcType=VARCHAR}
+  	</update>
+  	
+  	<select id="get" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    	SELECT * FROM biz_deliver WHERE id = #{id,jdbcType=VARCHAR}
+  	</select>
+  
+  	<select id="queryPage" parameterType="map" resultMap="BaseResultMap">
+  		SELECT * 
+  		  FROM biz_deliver WHERE 1=1  
+  			<if test="obj.deliverNo != null and obj.deliverNo != ''" >AND deliver_no LIKE '%${obj.deliverNo}%'</if>
+  			<if test="obj.deliverName != null and obj.deliverName != ''" >AND deliver_name LIKE '%${obj.deliverName}%'</if>
+    	 LIMIT ${startIndex},#{pageSize}
+  	</select>
+  	
+  	<select id="queryCount" parameterType="com.aotu.entity.Deliver" resultType="java.lang.Integer" >
+		SELECT count(*) FROM biz_deliver WHERE 1=1 
+    		<if test="deliverNo != null and deliverNo != ''" >AND deliver_no LIKE '%${deliverNo}%'</if>
+  			<if test="deliverName != null and deliverName != ''" >AND deliver_name LIKE '%${deliverName}%'</if>
+  	</select>
+  	
+  	<select id="queryList" parameterType="com.aotu.entity.Deliver" resultMap="BaseResultMap">
+  		SELECT * 
+  		  FROM biz_deliver WHERE 1=1  
+  			<if test="deliverNo != null and deliverNo != ''" >AND deliver_no LIKE '%${deliverNo}%'</if>
+  			<if test="deliverName != null and deliverName != ''" >AND deliver_name LIKE '%${deliverName}%'</if>
+  	</select>
+  	
+</mapper>

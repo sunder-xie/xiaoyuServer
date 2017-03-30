@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aotu.dao.MenuDAO" >
+  	<resultMap id="BaseResultMap" type="com.aotu.entity.system.Menu" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+	    <result column="menu_url" property="menuUrl" jdbcType="VARCHAR" />
+	    <result column="parent_menu_id" property="parentMenuId" jdbcType="VARCHAR" />
+	    <result column="menu_icon" property="menuIcon" jdbcType="VARCHAR" />
+	    <result column="sort" property="sort" jdbcType="BIGINT" />
+	    <result column="sys_create_time" property="sysCreateTime" jdbcType="TIMESTAMP" />
+	    <result column="sys_update_time" property="sysUpdateTime" jdbcType="TIMESTAMP" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  	</resultMap>
+  	
+  	<insert id="save" parameterType="com.aotu.entity.system.Menu" >
+    	INSERT INTO sys_menu
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+      		id,
+      		menu_name,
+      		menu_url,
+      		parent_menu_id,
+      		menu_icon,
+      		sort,
+      		create_date,
+      		modify_date,
+      		remark
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		#{id,jdbcType=VARCHAR},
+      		#{menuName,jdbcType=VARCHAR},
+      		#{menuUrl,jdbcType=VARCHAR},
+      		#{parentMenuId,jdbcType=VARCHAR},
+      		#{menuIcon,jdbcType=VARCHAR},
+      		#{sort,jdbcType=BIGINT},
+      		#{createDate,jdbcType=TIMESTAMP},
+      		#{modifyDate,jdbcType=TIMESTAMP},
+      		#{remark,jdbcType=VARCHAR}
+    	</trim>
+  	</insert>
+  	
+  	<delete id="delete" parameterType="java.lang.String" >
+    	DELETE FROM sys_menu WHERE id = #{id, jdbcType=VARCHAR}
+  	</delete>
+ 
+ 	<update id="update" parameterType="com.aotu.entity.system.Menu" >
+    	UPDATE sys_menu
+    	<set >
+     		id = #{id,jdbcType=VARCHAR},
+      		menu_name = #{menuName,jdbcType=VARCHAR},
+      		menu_url = #{menuUrl,jdbcType=VARCHAR},
+      		parent_menu_id = #{parentMenuId,jdbcType=VARCHAR},
+      		menu_icon = #{menuIcon,jdbcType=VARCHAR},
+      		sort = #{sort,jdbcType=BIGINT},
+      		create_date = #{createDate,jdbcType=TIMESTAMP},
+      		modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      		remark = #{remark,jdbcType=VARCHAR}
+    	</set>
+    	WHERE id = #{id,jdbcType=VARCHAR}
+  	</update>
+  	
+  	<select id="get" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    	SELECT * FROM sys_menu
+    		WHERE id = #{id,jdbcType=VARCHAR}
+  	</select>
+  
+  	<select id="queryPage" parameterType="map" resultMap="BaseResultMap">
+  		SELECT * FROM sys_menu WHERE 1=1
+    	<if test="obj.remark != null" >AND remark = #{obj.remark}</if>
+    	<if test="obj.menuName != null and obj.menuName != ''" > AND menu_name like '%${obj.menuName}%'</if>
+    	<if test="obj.parentMenuId != null and obj.parentMenuId != ''" > AND parent_menu_id = #{obj.parentMenuId}</if>
+    	order by sort
+    	limit ${startIndex},${pageSize}
+  	</select>
+  	
+  	<select id="queryCount" parameterType="com.aotu.entity.system.Menu" resultType="java.lang.Integer" >
+		SELECT count(*) FROM sys_menu WHERE 1=1
+    	<if test="menuName != null and menuName != ''" > AND menu_name like '%${menuName}%'</if>
+    	<if test="parentMenuId != null and parentMenuId != ''" > AND parent_menu_id = #{parentMenuId}</if>
+  	</select>
+  	
+  	<select id="queryList" parameterType="com.aotu.entity.system.Menu" resultMap="BaseResultMap" >
+		SELECT * FROM sys_menu WHERE 1=1
+    	<if test="menuName != null and menuName != ''" > AND menu_name like '%${menuName}%'</if>
+    	<if test="parentMenuId != null and parentMenuId != ''" > AND parent_menu_id = #{parentMenuId}</if>
+  	</select>
+  	
+  	<select id="queryListByRoleId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  		SELECT t1.* FROM sys_menu t1, sys_role_menu t2 
+  		 WHERE t2.role_id =  ${roleId} 
+  		   AND t1.id = t2.menu_id
+  		  ORDER BY t1.parent_menu_id, t1.sort
+  	</select>
+  	
+</mapper>
