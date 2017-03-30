@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="app_preset_prof_preset_name">MapDistance Launch Configuration</entry>
+<entry key="app_preset_prof_preset_filter_s"/>
+<entry key="app_preset_prof_preset_filter_p">com.aotu.controller.app.appuser.*,
+com.aotu.controller.base.*,
+com.aotu.controller.information.pictures.*,
+com.aotu.controller.system.appuser.*,
+com.aotu.controller.system.createcode.*,
+com.aotu.controller.system.dictionaries.*,
+com.aotu.controller.system.head.*,
+com.aotu.controller.system.login.*,
+com.aotu.controller.system.menu.*,
+com.aotu.controller.system.role.*,
+com.aotu.controller.system.secCode.*,
+com.aotu.controller.system.tools.*,
+com.aotu.controller.system.user.*,
+com.aotu.controller.system.weixin.*,
+com.aotu.dao.*,
+com.aotu.entity.*,
+com.aotu.filter.*,
+com.aotu.interceptor.*,
+com.aotu.listener.*,
+com.aotu.plugin.*,
+com.aotu.resolver.*,
+com.aotu.service.information.pictures.*,
+com.aotu.service.system.appuser.*,
+com.aotu.service.system.dictionaries.*,
+com.aotu.service.system.menu.*,
+com.aotu.service.system.role.*,
+com.aotu.service.system.user.*,
+com.aotu.util.*</entry>
+<entry key="app_preset_prof_preset_alloc_p">10</entry>
+<entry key="app_preset_"/>
+<entry key="app_preset_prof_preset_samplingRefreshRate_s">1000</entry>
+<entry key="app_preset_prof_preset_stacks_p">false</entry>
+<entry key="app_preset_prof_preset_roots_p">com.aotu.controller.app.appuser.**
+com.aotu.controller.base.**
+com.aotu.controller.information.pictures.**
+com.aotu.controller.system.appuser.**
+com.aotu.controller.system.createcode.**
+com.aotu.controller.system.dictionaries.**
+com.aotu.controller.system.head.**
+com.aotu.controller.system.login.**
+com.aotu.controller.system.menu.**
+com.aotu.controller.system.role.**
+com.aotu.controller.system.secCode.**
+com.aotu.controller.system.tools.**
+com.aotu.controller.system.user.**
+com.aotu.controller.system.weixin.**
+com.aotu.dao.**
+com.aotu.entity.**
+com.aotu.filter.**
+com.aotu.interceptor.**
+com.aotu.listener.**
+com.aotu.plugin.**
+com.aotu.resolver.**
+com.aotu.service.information.pictures.**
+com.aotu.service.system.appuser.**
+com.aotu.service.system.dictionaries.**
+com.aotu.service.system.menu.**
+com.aotu.service.system.role.**
+com.aotu.service.system.user.**
+com.aotu.util.**
+</entry>
+<entry key="profiler.settings.instrument.empty.methods">false</entry>
+<entry key="myeclipse.profiling.mode">0</entry>
+<entry key="profiler.settings.istrument.getter.setter.methods">false</entry>
+<entry key="app_preset_prof_preset_samplingRate_s">100</entry>
+<entry key="app_preset_prof_preset_filterMode_s">true</entry>
+<entry key="app_preset_prof_preset_selector"/>
+<entry key="app_preset_prof_preset_refreshRate_s">1000</entry>
+<entry key="app_preset_prof_preset_runnables_p">true</entry>
+<entry key="app_preset_prof_preset_filterMode_p">false</entry>
+<entry key="app_preset_prof_preset_memoryMode_p">true</entry>
+</properties>

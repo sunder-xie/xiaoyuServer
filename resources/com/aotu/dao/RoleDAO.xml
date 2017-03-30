@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aotu.dao.RoleDAO" >
+  	<resultMap id="BaseResultMap" type="com.aotu.entity.system.Role" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+	    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+	    <result column="sort" property="sort" jdbcType="BIGINT" />
+	    <result column="sys_create_time" property="sysCreateTime" jdbcType="TIMESTAMP" />
+	    <result column="sys_update_time" property="sysUpdateTime" jdbcType="TIMESTAMP" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  	</resultMap>
+  	
+  	<insert id="save" parameterType="com.aotu.entity.system.Role" >
+    	INSERT INTO sys_role
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+      		id,
+      		role_code,
+      		role_name,
+      		sort,
+      		create_date,
+      		modify_date,
+      		remark
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		#{id,jdbcType=VARCHAR},
+      		#{roleCode,jdbcType=VARCHAR},
+      		#{roleName,jdbcType=VARCHAR},
+      		#{sort,jdbcType=BIGINT},
+      		#{createDate,jdbcType=TIMESTAMP},
+      		#{modifyDate,jdbcType=TIMESTAMP},
+      		#{remark,jdbcType=VARCHAR}
+    	</trim>
+  	</insert>
+  	
+  	<delete id="delete" parameterType="java.lang.String" >
+    	DELETE FROM sys_role WHERE id = #{id, jdbcType=VARCHAR}
+  	</delete>
+ 
+ 	<update id="update" parameterType="com.aotu.entity.system.Role" >
+    	UPDATE sys_role
+    	<set >
+     		id = #{id,jdbcType=VARCHAR},
+      		role_code = #{roleCode,jdbcType=VARCHAR},
+      		role_name = #{roleName,jdbcType=VARCHAR},
+      		sort = #{sort,jdbcType=BIGINT},
+      		create_date = #{createDate,jdbcType=TIMESTAMP},
+      		modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      		remark = #{remark,jdbcType=VARCHAR}
+    	</set>
+    	WHERE id = #{id,jdbcType=VARCHAR}
+  	</update>
+  	
+  	<select id="get" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    	SELECT * FROM sys_role
+    		WHERE id = #{id,jdbcType=VARCHAR}
+  	</select>
+  
+  	<select id="queryPage" parameterType="map" resultMap="BaseResultMap">
+  		SELECT * FROM sys_role WHERE 1=1
+  		
+  		ORDER BY sort ASC
+    	LIMIT ${startIndex},${pageSize}
+  	</select>
+  	
+  	<select id="queryCount" parameterType="com.aotu.entity.system.Role" resultType="java.lang.Integer" >
+		SELECT count(*) FROM sys_role WHERE 1=1
+  	</select>
+  	
+</mapper>

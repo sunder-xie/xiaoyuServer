@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aotu.dao.MemberDAO" >
+  	<resultMap id="BaseResultMap" type="com.aotu.entity.Member" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="member_no" property="memberNo" jdbcType="VARCHAR" />
+	    <result column="member_type" property="memberType" jdbcType="VARCHAR" />
+	    <result column="time_range" property="timeRange" jdbcType="VARCHAR" />
+	    <result column="rank" property="rank" jdbcType="VARCHAR" />
+	    <result column="superior_member_id" property="superiorMemberId" jdbcType="VARCHAR" />
+	    <result column="superior_member_no" property="superiorMemberNo" jdbcType="VARCHAR" />
+	    <result column="wechat_name" property="wechatName" jdbcType="VARCHAR" />
+	    <result column="wechat_openid" property="wechatOpenid" jdbcType="VARCHAR" />
+	    <result column="phone" property="phone" jdbcType="VARCHAR" />
+	    <result column="address" property="address" jdbcType="VARCHAR" />
+	    <result column="collector_name" property="collectorName" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="head_img" property="headImg" jdbcType="VARCHAR" />
+	    <result column="qr_code_url" property="qrCodeUrl" jdbcType="VARCHAR" />
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+	    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  	</resultMap>
+  	
+  	<insert id="save" parameterType="com.aotu.entity.Member" >
+    	INSERT INTO biz_member
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+      		id,
+      		member_no,
+      		member_type,
+      		time_range,
+      		rank,
+      		superior_member_id,
+      		wechat_name,
+      		wechat_openid,
+      		phone,
+      		address,
+      		collector_name,
+      		status,
+      		head_img,
+      		qr_code_url,
+      		create_date,
+      		modify_date,
+      		remark
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		#{id,jdbcType=VARCHAR},
+      		#{memberNo,jdbcType=VARCHAR},
+      		#{memberType,jdbcType=VARCHAR},
+      		#{timeRange,jdbcType=VARCHAR},
+      		#{rank,jdbcType=VARCHAR},
+      		#{superiorMemberId,jdbcType=VARCHAR},
+      		#{wechatName,jdbcType=VARCHAR},
+      		#{wechatOpenid,jdbcType=VARCHAR},
+      		#{phone,jdbcType=VARCHAR},
+      		#{address,jdbcType=VARCHAR},
+      		#{collectorName,jdbcType=VARCHAR},
+      		#{status,jdbcType=VARCHAR},
+      		#{headImg,jdbcType=VARCHAR},
+      		#{qrCodeUrl,jdbcType=VARCHAR},
+      		#{createDate,jdbcType=TIMESTAMP},
+      		#{modifyDate,jdbcType=TIMESTAMP},
+      		#{remark,jdbcType=VARCHAR}
+    	</trim>
+  	</insert>
+  	
+  	<delete id="delete" parameterType="java.lang.String" >
+    	DELETE FROM biz_member WHERE id = #{id, jdbcType=VARCHAR}
+  	</delete>
+ 
+ 	<update id="update" parameterType="com.aotu.entity.Member" >
+    	UPDATE biz_member
+    	<set >
+     		member_no = #{memberNo,jdbcType=VARCHAR},
+     		member_type = #{memberType,jdbcType=VARCHAR},
+       		rank = #{rank,jdbcType=VARCHAR},
+      		superior_member_id = #{superiorMemberId,jdbcType=VARCHAR},
+      		wechat_name = #{wechatName,jdbcType=VARCHAR},
+      		wechat_openid = #{wechatOpenid,jdbcType=VARCHAR},
+      		phone = #{phone,jdbcType=VARCHAR},
+      		address = #{address,jdbcType=VARCHAR},
+      		collector_name = #{collectorName,jdbcType=VARCHAR},
+       		status = #{status,jdbcType=VARCHAR},
+       		head_img = #{headImg,jdbcType=VARCHAR},
+       		qr_code_url = #{qrCodeUrl,jdbcType=VARCHAR},
+      		create_date = #{createDate,jdbcType=TIMESTAMP},
+      		modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      		remark = #{remark,jdbcType=VARCHAR},
+    	</set>
+    	WHERE id = #{id,jdbcType=VARCHAR}
+  	</update>
+  	
+  	<select id="get" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    	SELECT * FROM biz_member WHERE id = #{id,jdbcType=VARCHAR}
+  	</select>
+  
+  	<select id="queryPage" parameterType="map" resultMap="BaseResultMap">
+  		SELECT m1.*, 
+  			(select m2.member_no from biz_member m2 where m2.id = m1.superior_member_id) as superior_member_no 
+  		  FROM biz_member m1 WHERE 1=1  
+  			<if test="obj.memberNo != null" >AND m1.member_no like '%${obj.memberNo}%'</if>
+  			<if test="obj.superiorMemberId != null">AND superior_member_id = #{obj.superiorMemberId}</if>
+    	limit ${startIndex},#{pageSize}
+  	</select>
+  	
+  	<select id="queryCount" parameterType="com.aotu.entity.Member" resultType="java.lang.Integer" >
+		SELECT count(*) FROM biz_member WHERE 1=1 
+    		<if test="memberNo != null" >AND member_no like '%${memberNo}%'</if>
+    		<if test="superiorMemberId != null">AND superior_member_id = #{superiorMemberId}</if>
+    		<if test="createDateStr != null" >AND DATE_FORMAT(create_date,'%Y-%m-%d') = #{createDateStr}</if>
+  	</select>
+  	<select id="querySum" parameterType="com.aotu.entity.Member" resultMap="BaseResultMap">
+  		SELECT SUM(m.member_no) member_no FROM biz_member m WHERE 1 = 1
+  	</select>
+  	<select id="queryList" parameterType="com.aotu.entity.Member" resultMap="BaseResultMap">
+  		SELECT *  FROM biz_member m WHERE 1= 1
+  		<if test="memberNo != null" >AND member_no = #{memberNo}</if>
+  		<if test="wechatOpenid != null" >AND wechat_openid = #{wechatOpenid}</if>
+  		<if test="superiorMemberId !=null"> and superior_member_id = #{superiorMemberId}</if>
+  	</select>
+  	<select id="queryMyCollector" parameterType="com.aotu.entity.Member" resultMap="BaseResultMap">
+  		SELECT m.* from biz_member m, biz_member_collector mc 
+		 WHERE m.id = mc.collector_id
+		   AND mc.member_id = #{id};
+  	</select>
+  	
+  	<select id="queryUsb" parameterType="map" resultMap="BaseResultMap">
+  		SELECT m1.*, 
+  			(select m2.member_no from biz_member m2 where m2.id = m1.superior_member_id) as superior_member_no 
+  		  FROM biz_member m1 WHERE 1=1  
+  			<if test="obj.memberNo != null" >AND m1.member_no = #{obj.memberNo}</if>
+    	limit ${startIndex},#{pageSize}
+  	</select>
+  	
+  	<insert id="saveMemberCollector" parameterType="com.aotu.entity.MemberCollector" >
+    	INSERT INTO biz_member_collector
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+      		id,
+      		member_id,
+      		collector_id,
+      		create_date,
+      		modify_date,
+      		remark
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		#{id,jdbcType=VARCHAR},
+      		#{memberId,jdbcType=VARCHAR},
+      		#{collectorId,jdbcType=VARCHAR},
+      		#{createDate,jdbcType=TIMESTAMP},
+      		#{modifyDate,jdbcType=TIMESTAMP},
+      		#{remark,jdbcType=VARCHAR}
+    	</trim>
+  	</insert>
+  	
+  	<select id="queryMemberCollectorList" parameterType="com.aotu.entity.MemberCollector" resultMap="BaseResultMap">
+  		SELECT m.* from biz_member_collector m
+		 WHERE m.member_id = #{memberId}
+		   AND m.collector_id = #{collectorId}
+  	</select>
+  	
+</mapper>

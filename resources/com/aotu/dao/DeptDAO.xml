@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aotu.dao.DeptDAO" >
+  	<resultMap id="BaseResultMap" type="com.aotu.entity.system.Dept" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="parent_dept_id" property="parentDeptId" jdbcType="VARCHAR" />
+	    <result column="dept_name" property="deptName" jdbcType="VARCHAR" />
+	    <result column="dept_level" property="deptLevel" jdbcType="VARCHAR" />
+	    <result column="dept_type" property="deptType" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="sys_create_time" property="sysCreateTime" jdbcType="TIMESTAMP" />
+	    <result column="sys_update_time" property="sysUpdateTime" jdbcType="TIMESTAMP" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  	</resultMap>
+  	
+  	<insert id="save" parameterType="com.aotu.entity.system.Dept" >
+    	INSERT INTO sys_dept
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+      		id,
+      		parent_dept_id,
+      		dept_name,
+      		dept_level,
+      		dept_type,
+      		status,
+      		create_date,
+      		modify_date,
+      		remark
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		#{id,jdbcType=VARCHAR},
+      		#{parentDeptId,jdbcType=VARCHAR},
+      		#{deptName,jdbcType=VARCHAR},
+      		#{deptLevel,jdbcType=VARCHAR},
+      		#{deptType,jdbcType=VARCHAR},
+      		#{status,jdbcType=VARCHAR},
+      		#{createDate,jdbcType=TIMESTAMP},
+      		#{modifyDate,jdbcType=TIMESTAMP},
+      		#{remark,jdbcType=VARCHAR}
+    	</trim>
+  	</insert>
+  	
+  	<delete id="delete" parameterType="java.lang.String" >
+    	DELETE FROM sys_dept WHERE id = #{id, jdbcType=VARCHAR}
+  	</delete>
+ 
+ 	<update id="update" parameterType="com.aotu.entity.system.Dept" >
+    	UPDATE sys_dept
+    	<set >
+     		id = #{id,jdbcType=VARCHAR},
+      		parent_dept_id = #{parentDeptId,jdbcType=VARCHAR},
+      		dept_name = #{deptName,jdbcType=VARCHAR},
+      		dept_level = #{deptLevel,jdbcType=VARCHAR},
+      		dept_type = #{deptType,jdbcType=VARCHAR},
+      		status = #{status,jdbcType=VARCHAR},
+      		create_date = #{createDate,jdbcType=TIMESTAMP},
+      		modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      		remark = #{remark,jdbcType=VARCHAR}
+    	</set>
+    	WHERE id = #{id,jdbcType=VARCHAR}
+  	</update>
+  	
+  	<select id="get" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    	SELECT * FROM sys_dept
+    		WHERE id = #{id,jdbcType=VARCHAR}
+  	</select>
+  
+  	<select id="queryPage" parameterType="map" resultMap="BaseResultMap">
+  		SELECT * FROM sys_dept WHERE 1=1
+    	<if test="obj.parentDeptId != null" >AND parent_dept_id = #{obj.parentDeptId}</if>
+    	<if test="obj.deptName != null and obj.deptName != ''" > AND dept_name like '%${obj.deptName}%'</if>
+    	limit ${startIndex},${pageSize}
+  	</select>
+  	
+  	<select id="queryCount" parameterType="com.aotu.entity.system.Dept" resultType="java.lang.Integer" >
+		SELECT count(*) FROM sys_dept WHERE 1=1
+		<if test="parentDeptId != null" >AND parent_dept_id = #{parentDeptId}</if>
+		<if test="deptName != null and deptName != ''" > AND dept_name like '%${deptName}%'</if>
+  	</select>
+  	
+  	<select id="querySubDeptList" parameterType="com.aotu.entity.system.Dept" resultMap="BaseResultMap">
+  		SELECT * FROM sys_dept WHERE parent_dept_id = #{id}
+  	</select>
+  	
+</mapper>

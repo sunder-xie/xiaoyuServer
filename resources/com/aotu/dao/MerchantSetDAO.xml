@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aotu.dao.MerchantSetDAO" >
+  	<resultMap id="BaseResultMap" type="com.aotu.entity.MerchantSet" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />
+	    <result column="app_id" property="appId" jdbcType="VARCHAR" />
+	    <result column="app_secret" property="appSecret" jdbcType="VARCHAR" />
+	    <result column="partner" property="partner" jdbcType="VARCHAR" />
+	    <result column="partner_key" property="partnerKey" jdbcType="VARCHAR" />
+	    <result column="merchant_no" property="merchantNo" jdbcType="VARCHAR" />
+	    <result column="rake_proportion" property="rakeProportion" jdbcType="DECIMAL" />
+	    <result column="merchant_balance" property="merchantBalance" jdbcType="DECIMAL" />
+	    <result column="total_income_amt" property="totalIncomeAmt" jdbcType="DECIMAL" />
+	    <result column="total_red_packet_amt" property="totalRedPacketAmt" jdbcType="DECIMAL" />
+	    <result column="standard_amt" property="standardAmt" jdbcType="DECIMAL" />
+	    <result column="total_profit_amt" property="totalProfitAmt" jdbcType="DECIMAL" />
+	    <result column="total_pay_count" property="totalPayCount" jdbcType="BIGINT" />
+	    <result column="current_stage" property="currentStage" jdbcType="VARCHAR" />
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+	    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  	</resultMap>
+  	
+  	<insert id="save" parameterType="com.aotu.entity.MerchantSet" >
+    	INSERT INTO biz_merchant_set
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+      		id,
+      		merchant_name,
+      		merchant_no,
+      		app_id,
+      		app_secret,
+      		partner,
+      		partner_key,
+      		rake_proportion,
+      		merchant_balance,
+      		total_income_amt,
+      		total_red_packet_amt,
+      		standard_amt,
+      		total_profit_amt,
+      		total_pay_count,
+      		current_stage,
+      		create_date,
+      		modify_date,
+      		remark
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		#{id,jdbcType=VARCHAR},
+      		#{merchantName,jdbcType=VARCHAR},
+      		#{merchantNo,jdbcType=VARCHAR},
+      		#{appId,jdbcType=VARCHAR},
+      		#{appSecret,jdbcType=VARCHAR},
+      		#{partner,jdbcType=VARCHAR},
+      		#{partnerKey,jdbcType=VARCHAR},
+      		#{rakeProportion,jdbcType=DECIMAL},
+      		#{merchantBalance,jdbcType=DECIMAL},
+      		#{totalIncomeAmt,jdbcType=DECIMAL},
+      		#{totalRedPacketAmt,jdbcType=DECIMAL},
+      		#{standardAmt,jdbcType=DECIMAL},
+      		#{totalProfitAmt,jdbcType=DECIMAL},
+      		#{totalPayCount,jdbcType=BIGINT},
+      		#{currentStage,jdbcType=VARCHAR},
+      		#{createDate,jdbcType=TIMESTAMP},
+      		#{modifyDate,jdbcType=TIMESTAMP},
+      		#{remark,jdbcType=VARCHAR}
+    	</trim>
+  	</insert>
+  	
+  	<delete id="delete" parameterType="java.lang.String" >
+    	DELETE FROM biz_merchant_set WHERE id = #{id, jdbcType=VARCHAR}
+  	</delete>
+ 
+ 	<update id="update" parameterType="com.aotu.entity.MerchantSet" >
+    	UPDATE biz_merchant_set
+    	<set >
+     		merchant_name = #{merchantName,jdbcType=VARCHAR},
+       		merchant_no = #{merchantNo,jdbcType=VARCHAR},
+       		app_id = #{appId,jdbcType=VARCHAR},
+       		app_secret = #{appSecret,jdbcType=VARCHAR},
+       		partner = #{partner,jdbcType=VARCHAR},
+       		partner_key = #{partnerKey,jdbcType=VARCHAR},
+      		rake_proportion = #{rakeProportion,jdbcType=DECIMAL},
+      		merchant_balance = #{merchantBalance,jdbcType=DECIMAL},
+      		total_income_amt = #{totalIncomeAmt,jdbcType=DECIMAL},
+      		total_red_packet_amt = #{totalRedPacketAmt,jdbcType=DECIMAL},
+      		standard_amt = #{standardAmt,jdbcType=DECIMAL},
+      		total_profit_amt = #{totalProfitAmt,jdbcType=DECIMAL},
+      		total_pay_count = #{totalPayCount,jdbcType=BIGINT},
+      		current_stage = #{currentStage,jdbcType=VARCHAR},
+      		create_date = #{createDate,jdbcType=TIMESTAMP},
+      		modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      		remark = #{remark,jdbcType=VARCHAR}
+    	</set>
+    	WHERE id = #{id,jdbcType=VARCHAR}
+  	</update>
+  	
+  	<select id="get" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    	SELECT * FROM biz_merchant_set
+    		WHERE id = #{id,jdbcType=VARCHAR}
+  	</select>
+  
+  	<select id="queryPage" parameterType="map" resultMap="BaseResultMap">
+  		SELECT *  FROM biz_merchant_set WHERE 1=1  
+  			<if test="obj.merchantName != null" >AND merchant_name = #{obj.merchantName}</if>
+    	limit ${startIndex},#{pageSize}
+  	</select>
+  	
+  	<select id="queryCount" parameterType="com.aotu.entity.MerchantSet" resultType="java.lang.Integer" >
+		SELECT count(*) FROM biz_merchant_set WHERE 1=1 
+    		<if test="merchantName != null" >AND merchant_name = #{merchantName}</if>
+  	</select>
+  	<select id="querySum" parameterType="com.aotu.entity.MerchantSet" resultMap="BaseResultMap">
+  		SELECT SUM(m.merchant_name) merchant_name FROM biz_merchant_set m WHERE 1 = 1
+  	</select>
+  	<select id="queryList" parameterType="com.aotu.entity.MerchantSet" resultMap="BaseResultMap">
+  		SELECT * FROM biz_merchant_set m WHERE 1=1
+  	</select>
+  	
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aotu.dao.ParamDAO" >
+  	<resultMap id="BaseResultMap" type="com.aotu.entity.system.Param" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="param_name" property="paramName" jdbcType="VARCHAR" />
+	    <result column="param_type" property="paramType" jdbcType="VARCHAR" />
+	    <result column="param_value" property="paramValue" jdbcType="VARCHAR" />
+	    <result column="param_key" property="paramKey" jdbcType="VARCHAR" />
+	    <result column="sys_create_time" property="sysCreateTime" jdbcType="TIMESTAMP" />
+	    <result column="sys_update_time" property="sysUpdateTime" jdbcType="TIMESTAMP" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  	</resultMap>
+  	
+  	<insert id="save" parameterType="com.aotu.entity.system.Param" >
+    	INSERT INTO sys_param
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+      		id,
+      		param_name,
+      		param_type,
+      		param_value,
+      		param_key,
+      		create_date,
+      		modify_date,
+      		remark
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		#{id,jdbcType=VARCHAR},
+      		#{paramName,jdbcType=VARCHAR},
+      		#{paramType,jdbcType=VARCHAR},
+      		#{paramValue,jdbcType=VARCHAR},
+      		#{paramKey,jdbcType=VARCHAR},
+      		#{createDate,jdbcType=TIMESTAMP},
+      		#{modifyDate,jdbcType=TIMESTAMP},
+      		#{remark,jdbcType=VARCHAR}
+    	</trim>
+  	</insert>
+  	
+  	<delete id="delete" parameterType="java.lang.String" >
+    	DELETE FROM sys_param WHERE id = #{id, jdbcType=VARCHAR}
+  	</delete>
+ 
+ 	<update id="update" parameterType="com.aotu.entity.system.Param" >
+    	UPDATE sys_param
+    	<set >
+     		id = #{id,jdbcType=VARCHAR},
+      		param_name = #{paramName,jdbcType=VARCHAR},
+      		param_type = #{paramType,jdbcType=VARCHAR},
+      		param_value = #{paramValue,jdbcType=VARCHAR},
+      		param_key = #{paramKey,jdbcType=VARCHAR},
+      		create_date = #{createDate,jdbcType=TIMESTAMP},
+      		modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      		remark = #{remark,jdbcType=VARCHAR}
+    	</set>
+    	WHERE id = #{id,jdbcType=VARCHAR}
+  	</update>
+  	
+  	<select id="get" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    	SELECT * FROM sys_param
+    		WHERE id = #{id,jdbcType=VARCHAR}
+  	</select>
+  	
+  	<select id="getParamByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    	SELECT * FROM sys_param
+    		WHERE param_name = #{paramName,jdbcType=VARCHAR}
+  	</select>
+  
+  	<select id="queryPage" parameterType="map" resultMap="BaseResultMap">
+  		SELECT * FROM sys_param WHERE 1=1
+    	<if test="obj.remark != null" >AND remark = #{obj.remark}</if>
+    	<if test="obj.paramName != null and obj.paramName != ''" > AND param_name like '%${obj.paramName}%'</if>
+    	limit ${startIndex},${pageSize}
+  	</select>
+  	
+  	<select id="queryCount" parameterType="com.aotu.entity.system.Param" resultType="java.lang.Integer" >
+		SELECT count(*) FROM sys_param WHERE 1=1
+		<if test="paramName != null and paramName != ''" > AND param_name like '%${paramName}%'</if>
+  	</select>
+  	
+</mapper>

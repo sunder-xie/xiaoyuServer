@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aotu.dao.ReportDAO" >
+  	<resultMap id="BaseResultMap" type="com.aotu.entity.ReportVO" >
+	    <result column="grant_date" property="grantDate" jdbcType="VARCHAR" />
+	    <result column="grant_money" property="grantMoney" jdbcType="DECIMAL" />
+	    <result column="pay_money" property="payMoney" jdbcType="DECIMAL" />
+	    <result column="profit_money" property="profitMoney" jdbcType="DECIMAL" />
+	    <result column="pure_profit" property="pureProfit" jdbcType="DECIMAL" />
+  	</resultMap>
+  	
+  	<select id="queryPage" parameterType="map" resultMap="BaseResultMap">
+  		select sum(r.pay_money) pay_money, 
+			   sum(r.grant_money) grant_money,
+			   sum(r.profit_money) profit_money,
+			   (sum(r.pay_money) - sum(r.grant_money) - sum(r.profit_money)) pure_profit,
+			   DATE_FORMAT(r.grant_date,'%Y-%m-%d') grant_date
+ 		  from biz_red_packet r
+		 where 1 = 1
+		 <if test="obj.startDate != null and obj.startDate != ''" >
+		   AND DATE_FORMAT(grant_date,'%m/%d/%Y') &gt;= #{obj.startDate}
+		 </if>
+		 <if test="obj.endDate != null and obj.endDate != ''" >
+		   AND DATE_FORMAT(grant_date,'%m/%d/%Y') &lt;= #{obj.endDate}
+		 </if>
+ 		 group by DATE_FORMAT(r.grant_date,'%Y-%m-%d')
+    	 order by r.grant_date desc
+    	 limit ${startIndex},#{pageSize}
+  	</select>
+  	
+  	<select id="queryCount" parameterType="com.aotu.entity.ReportVO" resultType="java.lang.Integer" >
+		select count(*) from (
+				select sum(pay_money)
+		 		  from biz_red_packet r
+				 where 1 = 1
+				 <if test="startDate != null and startDate != ''" >
+				   AND DATE_FORMAT(grant_date,'%m/%d/%Y') &gt;= #{startDate}
+				 </if>
+				 <if test="endDate != null and endDate != ''" >
+				   AND DATE_FORMAT(grant_date,'%m/%d/%Y') &lt;= #{endDate}
+				 </if>
+				 group by DATE_FORMAT(r.grant_date,'%Y-%m-%d')
+				 ) t
+  	</select>
+  	
+</mapper>

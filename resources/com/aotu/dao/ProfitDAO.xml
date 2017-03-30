@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aotu.dao.ProfitDAO" >
+  	<resultMap id="BaseResultMap" type="com.aotu.entity.Profit" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="profit_no" property="profitNo" jdbcType="VARCHAR" />
+	    <result column="profit_money" property="profitMoney" jdbcType="DECIMAL" />
+	    <result column="member_id" property="memberId" jdbcType="VARCHAR" />
+	    <result column="member_no" property="memberNo" jdbcType="VARCHAR" />
+	    <result column="wechat_name" property="wechatName" jdbcType="VARCHAR" />
+	    <result column="wechat_account" property="wechatAccount" jdbcType="VARCHAR" />
+	    <result column="grant_date" property="grantDate" jdbcType="TIMESTAMP" />
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+	    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  	</resultMap>
+  	
+  	<insert id="save" parameterType="com.aotu.entity.Profit" >
+    	INSERT INTO biz_profit
+    	<trim prefix="(" suffix=")" suffixOverrides="," >
+      		id,
+      		profit_no,
+      		profit_money,
+      		member_id,
+      		wechat_name,
+      		wechat_account,
+      		grant_date,
+      		status,
+      		create_date,
+      		modify_date,
+      		remark
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+      		#{id,jdbcType=VARCHAR},
+      		#{profitNo,jdbcType=VARCHAR},
+      		#{profitMoney,jdbcType=DECIMAL},
+      		#{memberId,jdbcType=VARCHAR},
+      		#{wechatName,jdbcType=VARCHAR},
+      		#{wechatAccount,jdbcType=VARCHAR},
+      		#{grantDate,jdbcType=TIMESTAMP},
+      		#{status,jdbcType=VARCHAR},
+      		#{createDate,jdbcType=TIMESTAMP},
+      		#{modifyDate,jdbcType=TIMESTAMP},
+      		#{remark,jdbcType=VARCHAR}
+    	</trim>
+  	</insert>
+  	
+  	<delete id="delete" parameterType="java.lang.String" >
+    	DELETE FROM biz_profit WHERE id = #{id, jdbcType=VARCHAR}
+  	</delete>
+ 
+ 	<update id="update" parameterType="com.aotu.entity.Profit" >
+    	UPDATE biz_profit
+    	<set >
+     		profit_no = #{profitNo,jdbcType=VARCHAR},
+       		profit_money = #{profitMoney,jdbcType=DECIMAL},
+      		member_id = #{memberId,jdbcType=VARCHAR},
+      		wechat_name = #{wechatName,jdbcType=VARCHAR},
+      		wechat_account = #{wechatAccount,jdbcType=VARCHAR},
+      		grant_date = #{grantDate,jdbcType=TIMESTAMP},
+       		status = #{status,jdbcType=VARCHAR},
+      		create_date = #{createDate,jdbcType=TIMESTAMP},
+      		modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      		remark = #{remark,jdbcType=VARCHAR},
+    	</set>
+    	WHERE id = #{id,jdbcType=VARCHAR}
+  	</update>
+  	
+  	<select id="get" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    	SELECT * FROM biz_profit
+    		WHERE id = #{id,jdbcType=VARCHAR}
+  	</select>
+  
+  	<select id="queryPage" parameterType="map" resultMap="BaseResultMap">
+  		SELECT *  FROM biz_profit p, biz_member m WHERE m.id = p.member_id  
+  			<if test="obj.profitNo != null" >AND p.profit_no = #{obj.profitNo}</if>
+  			<if test="obj.memberNo != null and obj.memberNo != ''" >AND m.member_no like '%${obj.memberNo}%'</if>
+  		order by p.create_date desc
+    	limit ${startIndex},#{pageSize}
+  	</select>
+  	
+  	<select id="queryCount" parameterType="com.aotu.entity.Profit" resultType="java.lang.Integer" >
+		SELECT count(*) FROM biz_profit p, biz_member m where m.id = p.member_id 
+    		<if test="profitNo != null" >AND p.profit_no = #{profitNo}</if>
+    		<if test="memberNo != null and memberNo != ''" >AND m.member_no like '%${memberNo}%'</if>
+    		<if test="createDateStr != null" >AND DATE_FORMAT(create_date,'%Y-%m-%d') = #{createDateStr}</if>
+  	</select>
+  	<select id="querySum" parameterType="com.aotu.entity.Profit" resultType="java.math.BigDecimal">
+  		SELECT SUM(p.profit_money) profit_money FROM biz_profit p WHERE 1 = 1
+  		<if test="createDateStr != null" >AND DATE_FORMAT(create_date,'%Y-%m-%d') = #{createDateStr}</if>
+  	</select>
+  	<select id="queryList" parameterType="com.aotu.entity.Profit" resultMap="BaseResultMap">
+  		SELECT *  FROM biz_profit p WHERE 1= 1
+  		<if test="profitNo != null" >AND profit_no = #{profitNo}</if>
+  	</select>
+  	
+</mapper>
