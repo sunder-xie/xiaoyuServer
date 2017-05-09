@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,8 @@ import com.aotu.entity.MemberCollector;
 import com.aotu.entity.MerchantSet;
 import com.aotu.entity.Order;
 import com.aotu.entity.Page;
+import com.aotu.entity.TemplateData;
+import com.aotu.entity.WxTemplate;
 import com.aotu.entity.system.Param;
 import com.aotu.service.IDeliverService;
 import com.aotu.service.IMemberService;
@@ -37,6 +40,7 @@ import com.aotu.util.CacheUtil;
 import com.aotu.util.DateUtil;
 import com.aotu.util.PageData;
 import com.aotu.util.PayCommonUtil;
+import com.aotu.util.WxTemplateUtils;
 import com.weixin.utils.CommonUtil;
 import com.weixin.utils.GetWxOrderno;
 import com.weixin.utils.Sha1Util;
@@ -613,5 +617,47 @@ public class ApiController extends ApiBaseController {
 //			response.sendRedirect("http://www.luckyyyg.com/api/auth.do");
 //		}
 	}
+	
+	@RequestMapping({"/sendOrderMessage"})
+	public void sendOrderMessage(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	WxTemplate wxTemplate = new WxTemplate();
+        wxTemplate.setUrl("http://www.jingyubao.com");
+        wxTemplate.setTouser("oHDFvxGywA5YUJx4Gxb9AzR1ZMiU");
+        wxTemplate.setTopcolor("#000000");
+        wxTemplate.setTemplate_id("-QfhhquyUOySIRdBi8-DmWKf4hc3K9KYKevOn_NEihI");
+        Map<String,TemplateData> m = new HashMap<String,TemplateData>();
+        TemplateData first = new TemplateData();
+        first.setColor("#436EEE");
+        first.setValue("您好，您有一笔资金转入成功！");
+        m.put("first", first);
+        
+        TemplateData tradeDateTime = new TemplateData();
+        tradeDateTime.setColor("#000000");
+        tradeDateTime.setValue("2017年3月13日 10:42:12");
+        m.put("tradeDateTime", tradeDateTime);
+        
+        TemplateData tradeType = new TemplateData();
+        tradeType.setColor("#000000");
+        tradeType.setValue("平安银行卡(尾号1180)转至鲸鱼活期");
+        m.put("tradeType", tradeType);
+        
+        TemplateData curAmount = new TemplateData();
+        curAmount.setColor("#436EEE");
+        curAmount.setValue("4999元");
+        m.put("curAmount", curAmount);
+        
+        TemplateData remark = new TemplateData();
+        remark.setColor("#436EEE");
+        String remarkValue = "计息时间：2017年3月13日\n"
+        		+ "账户总资产：11499元\n"
+        		+ "\n"
+        		+ "鲸鱼理财：懒人理财神器，对接债权来自世界500强金融机构，收益高达3.5%~9.4%。一元起投，保本保息，担保无忧\n";
+        remark.setValue(remarkValue);
+        m.put("remark", remark);
+        wxTemplate.setData(m);
+
+    	WxTemplateUtils.sendTemplateMessageNew(request, wxTemplate);
+    	
+    }
   
 }
